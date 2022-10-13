@@ -16,7 +16,6 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 
 #>
 
-
 param(
     [Parameter(Mandatory = $False)]
     [string]$QueryName,
@@ -31,13 +30,13 @@ $VMName = $VMName.Replace("_" + $hostname, '')
 <# Zabbix Hyper-V Virtual Machine Discovery #>
 if ($QueryName -eq '') {
     
-	
+
     $colItems = Get-VM
 
     write-host "{"
     write-host " `"data`":["
     write-host
-	
+
     $n = $colItems.Count
 
     foreach ($objItem in $colItems) {
@@ -76,7 +75,7 @@ if ($psboundparameters.Count -eq 2) {
             $ItemType = "VMCPU"
             $Results = (Get-Counter -Counter '\Hyper-V Hypervisor Virtual Processor(*)\% Total Run Time').CounterSamples | Where-Object { $_.InstanceName -like $VMName + ':*' } | select InstanceName
         }
-            
+
         default { $Results = "Bad Request"; exit }
     }
 
@@ -84,8 +83,7 @@ if ($psboundparameters.Count -eq 2) {
     write-host " `"data`":["
     write-host      
     #write-host $Results
-               
-       
+
     $n = ($Results | measure).Count
 
     foreach ($objItem in $Results) {
@@ -98,7 +96,7 @@ if ($psboundparameters.Count -eq 2) {
         write-host $line
         $n--
     }
-    
+
     write-host " ]"
     write-host "}"
     write-host
